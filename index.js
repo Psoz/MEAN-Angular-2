@@ -28,6 +28,9 @@ app.use(express.static(__dirname + '/client/dist/'));
 app.use('/authentication', authentication);
 
 app.get('*', function (req, res) {
+    if(req.error){
+        console.log(req.error);
+    }
     res.sendFile(path.join(__dirname + '/client/dist/index.html'));
 });
 
