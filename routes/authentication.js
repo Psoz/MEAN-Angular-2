@@ -124,7 +124,7 @@ module.exports = (router) => {
             }
         }
     });
-/*
+
     router.use((req,res, next) =>{
         const token = req.headers['authorization'];
 
@@ -141,7 +141,6 @@ module.exports = (router) => {
             })
         }
     });
-*/
     router.get('/profile', (req, res) =>{
        User.findOne({_id: req.decoded.userId}).select('username email').exec((err,user) => {
            if(err){
