@@ -46,7 +46,7 @@ export class AuthService {
     return this.http.post(this.domain + 'authentication/login', user).map(res => res.json());
   }
 
-  logout(){
+  logout() {
     this.authToken = null;
     this.user = null;
     localStorage.clear();
@@ -64,7 +64,12 @@ export class AuthService {
     return this.http.get(this.domain + 'authentication/profile', this.options).map(res => res.json());
   }
 
-  loggedIn(){
+  getPublicProfile(username) {
+    this.createAuthenticationHeaders();
+    return this.http.get(this.domain + 'authentication/publicProfile/' + username, this.options).map(res => res.json());
+  }
+
+  loggedIn() {
     return tokenNotExpired();
   }
 

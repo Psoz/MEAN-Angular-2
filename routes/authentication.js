@@ -92,31 +92,36 @@ module.exports = (router) => {
     });
 
 
-    router.post('/login', (req,res) => {
+    router.post('/login', (req, res) => {
         console.log(req.body);
-        if(!req.body.username){
+        if (!req.body.username) {
             res.json({success: false, message: 'No username was provided'});
         } else {
-            if(!req.body.password){
-                res.json({success:false, message:'No password was provided.'})
-            }else {
+            if (!req.body.password) {
+                res.json({success: false, message: 'No password was provided.'})
+            } else {
 
-                User.findOne({username: req.body.username.toLowerCase()},(err,user) =>{
+                User.findOne({username: req.body.username.toLowerCase()}, (err, user) => {
 
-                    if(err){
+                    if (err) {
                         res.json({success: false, message: err});
                     } else {
 
-                        if(!user){
-                            res.json({success : false, message: 'Username nor found.'});
-                        }else {
+                        if (!user) {
+                            res.json({success: false, message: 'Username nor found.'});
+                        } else {
 
                             const validPassword = user.comparePassword(req.body.password);
-                            if(!validPassword){
-                                res.json({success: false, message:'Password invalid!'});
+                            if (!validPassword) {
+                                res.json({success: false, message: 'Password invalid!'});
                             } else {
-                                const token = jwt.sign({userId: user._id}, config.secret, {expiresIn:'24h'});
-                                res.json({success:true, message: 'success!',token:token,user:{username:user.username}})
+                                const token = jwt.sign({userId: user._id}, config.secret, {expiresIn: '24h'});
+                                res.json({
+                                    success: true,
+                                    message: 'success!',
+                                    token: token,
+                                    user: {username: user.username}
+                                })
                             }
                         }
                     }
@@ -142,18 +147,38 @@ module.exports = (router) => {
         }
     });
 
-    router.get('/profile', (req, res) =>{
-       User.findOne({_id: req.decoded.userId}).select('username email').exec((err,user) => {
-           if(err){
-               res.json({success: false, message: err});
-           } else {
-               if(!user){
-                   res.json({success: false, message: 'User not found'})
-               }else {
-                   res.json({success:true, user: user});
-               }
-           }
-       })
+    router.get('/profile', (req, res) => {
+        User.findOne({_id: req.decoded.userId}).select('username email').exec((err, user) => {
+            if (err) {
+                res.json({success: false, message: err});
+            } else {
+                if (!user) {
+                    res.json({success: false, message: 'User not found'})
+                } else {
+                    res.json({success: true, user: user});
+                }
+            }
+        })
+    });
+
+
+    router.get('/publicProfile/:username', (req, res) => {
+        if (!req.params.username) {
+            res.json({success: false, message: 'No Username was provided'})
+        } else {
+            User.findOne({username: req.params.username}).select('username email').exec((err, user) => {
+                console.log(user);
+                if (err) {
+                    res.json({success: false, message: 'Something went wrong'})
+                } else {
+                    if (!user) {
+                        res.json({success: false, message: 'Username not found'})
+                    } else {
+                        res.json({success: true, user: user})
+                    }
+                }
+            })
+        }
     });
     return router;
 };

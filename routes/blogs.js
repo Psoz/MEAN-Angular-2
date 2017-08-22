@@ -206,7 +206,7 @@ module.exports = (router) => {
                                         } else {
                                             if (blog.dislikedBy.includes(user.username)) {
                                                 blog.dislikes--;
-                                                const arrayIndex = blog.dislikeby.indexOf(user.username);
+                                                const arrayIndex = blog.dislikedBy.indexOf(user.username);
                                                 blog.dislikedBy.splice(arrayIndex, 1);
                                                 blog.likes++;
                                                 blog.likedBy.push(user.username);
@@ -240,10 +240,12 @@ module.exports = (router) => {
     });
 
     router.put('/dislikeBlog', (req, res) => {
+
         if (!req.body.id) {
             res.json({success: false, message: 'No id was provided.'})
         } else {
             Blog.findOne({_id: req.body.id}, (err, blog) => {
+
                 if (err) {
                     res.json({success: false, message: 'Invalid blog id'});
                 } else {
@@ -260,12 +262,15 @@ module.exports = (router) => {
                                     if (user.username === blog.createdBy) {
                                         res.json({success: false, message: 'Cannot dislike your own post'});
                                     } else {
-                                        if (blog.likedBy.includes(user.username)) {
+                                        if (blog.dislikedBy.includes(user.username)) {
+                                            console.log(user.username);
+                                            console.log(blog.likedBy);
+                                            console.log(blog.dislikedBy);
                                             res.json({success: false, message: 'You already disliked this post'});
                                         } else {
                                             if (blog.likedBy.includes(user.username)) {
                                                 blog.likes--;
-                                                const arrayIndex = blog.likeby.indexOf(user.username);
+                                                const arrayIndex = blog.likedBy.indexOf(user.username);
                                                 blog.likedBy.splice(arrayIndex, 1);
                                                 blog.dislikes++;
                                                 blog.dislikedBy.push(user.username);

@@ -1,10 +1,11 @@
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {NgModule} from '@angular/core';
 import {HomeComponent} from './components/home/home.component';
 import {DashboardComponent} from './components/dashboard/dashboard.component';
 import {RegisterComponent} from './components/register/register.component';
 import {LoginComponent} from './components/login/login.component';
 import {ProfileComponent} from './components/profile/profile.component';
+import {PublicProfileComponent} from './components/public-profile/public-profile.component'
 import {BlogComponent} from './components/blog/blog.component';
 import {EditBlogComponent} from './components/blog/edit-blog/edit-blog.component';
 import {DeleteBlogComponent} from './components/blog/delete-blog/delete-blog.component';
@@ -52,6 +53,11 @@ const appRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'user/:username',
+    component: PublicProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: '**', component: HomeComponent
   }
 ];
@@ -62,7 +68,8 @@ const appRoutes: Routes = [
   imports: [RouterModule.forRoot(appRoutes)],
   providers: [],
   bootstrap: [],
-  exports:[RouterModule]
+  exports: [RouterModule]
 })
 
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
